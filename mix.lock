@@ -1,0 +1,10 @@
+%{
+  "complex": {:hex, :complex, "0.4.1", "5d5a7bdbec13428c05824bac550b7d2b14ec395cd64663eca3cb0d3359aa22c5", [:mix], [], "hexpm", "6a813529dddba9bdfc17dffdd1aeda7b3d6891b76c8d4c1ae902ec74eb496a32"},
+  "dll_loader_helper": {:hex, :dll_loader_helper, "0.1.0", "904c3cec32e6e0fc5914e41989ce9350d2bfd06b32f952a658fe63342b993e83", [:make, :mix], [{:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}], "hexpm", "b9db9151af610a2db375af543e912b3dd9cad87377d829328888386c65681473"},
+  "elixir_make": {:hex, :elixir_make, "0.6.3", "bc07d53221216838d79e03a8019d0839786703129599e9619f4ab74c8c096eac", [:mix], [], "hexpm", "f5cbd651c5678bcaabdbb7857658ee106b12509cd976c2c2fca99688e1daf716"},
+  "jason": {:hex, :jason, "1.3.0", "fa6b82a934feb176263ad2df0dbd91bf633d4a46ebfdffea0c8ae82953714946", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "53fc1f51255390e0ec7e50f9cb41e751c260d065dcba2bf0d08dc51a4002c2ac"},
+  "nimble_csv": {:hex, :nimble_csv, "1.2.0", "4e26385d260c61eba9d4412c71cea34421f296d5353f914afe3f2e71cce97722", [:mix], [], "hexpm", "d0628117fcc2148178b034044c55359b26966c6eaa8e2ce15777be3bbc91b12a"},
+  "nx": {:hex, :nx, "0.2.1", "0d440b5f50c848ad7eae58b430a153ac0df432b40ce8c5f876134e694b26706a", [:mix], [{:complex, "~> 0.4.1", [hex: :complex, repo: "hexpm", optional: false]}], "hexpm", "260c69986364a73376e4333a0871f90d32c6227d321e80e48c53e6fa5bf6e0bb"},
+  "scidata": {:git, "https://github.com/elixir-nx/scidata.git", "0336e188213b2d8629060930143013a43507ce2f", []},
+  "torchx": {:hex, :torchx, "0.2.1", "d8894b3687f3f24b40ea0f22642e49002ee98c6405435dd92e311da9da33faf0", [:make, :mix], [{:dll_loader_helper, "~> 0.1.0", [hex: :dll_loader_helper, repo: "hexpm", optional: false]}, {:elixir_make, "~> 0.6", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:nx, "~> 0.2.0", [hex: :nx, repo: "hexpm", optional: false]}], "hexpm", "6d74140bc814b7c2ccd31f403962729353b292b0d0e7f22b174205fff2419ede"},
+}
