@@ -1,97 +1,76 @@
 # Caefl
 [WIP] Repo for the CAEFL paper
 
+A simple example can be found [here](https://github.com/cocoa-xu/caefl_example).
+
 ## Basic Design
 ### Sensor
 ```elixir
-defmodule Sensor do
-  @callback init(init_param :: term) :: 
-            {:ok, sensor_state :: term}
-            | {:error, reason :: term}
-  @callback read_data(sensor_state :: term) :: 
-            {:ok, data :: term}
-            | {:error, reason :: term}
+defmodule CAEFL.Sensor do
+  @doc """
+  Sensor is expected to be initialised in this callback (if applicable).
+
+  The `init_param` argument is forwarded from `GenServer.start/start_link`.
+
+  The return value represents the state of current sensor.
+  """
+  @callback init_sensor(init_param :: term) ::
+    {:ok, sensor_state :: term}
+    | {:error, reason :: term}
+
+  @doc """
+  Read one sample from the sensor.
+  """
+  @callback read_data(sensor_state :: term) ::
+    {:ok, data :: term, new_sensor_state :: term}
+    | {:error, reason :: term}
 end
 ```
 
 ### Environment
 ```elixir
-defmodule Environment do
-  use GenServer
-  @impl true
-  def init(list_of_sensors)
-  def get_tags(e) do: GenServer.call(e, :get_tags)
-  @impl true
-  def handle_call(:get_tags, _from, e)
-  defp collect_data(e)
-  defp transform(data_from_a_sensor)
-  defp transform({type: :temperature, t: t}) do
-    case t do
-      t > 30 => {temperature: :hot}
-      t < 0 => {temperature: :cold}
-      _ => {temperature: :normal}
-    end
+defmodule CAEFL.Environment do
+  @doc """
+  Get current environment tags.
+  """
+  def get_tags(state) do
+    GenServer.call(state, :get_tags)
   end
-  defp transform(as_is), do: as_is
+
+  @doc """
+  Return a list of current available environment sensors.
+  """
+  @callback environment_sensors(state :: term) ::
+    {:ok, sensors :: term, new_state :: term}
+    | {:error, error :: term}
+
+  @doc """
+  Transform the data from a certain environment sensor to sematic/numerical tags.
+  """
+  @callback transform(sensor_readings :: term) :: map()
 end
 ```
 
-### NeuralNetwork
+### Agent
 ```elixir
-defmodule NeuralNetwork do
-  use GenServer
-  @impl true
-  def init(init_param)
-
-  # prediction
-  def predict_next(nn) do
-    tags = Environment.get_tags(e)
-    sample = Input.sample(input)
-    GenServer.call(nn, 
-      {:predict_one, tags, sample})
-  end
-  @impl true
-  def handle_call({:predict_one, tags, sample},
-                  _from, state) do
-    predict(state, tags, sample)
-  end
-  defp predict(state, tags, sample)
-  defp predict(state, {rain: true, fog: true},
-              sample) do
-    # use the specialized model for 
-    # rainy and foggy environment.
-  end
-  defp predict(state, {snow: true}, sample) do
-    # use the specialized model for snow
-  end
-  defp predict(state, _tags, sample) do
-    # fallback to the normal model
-  end
-  
-  # training
-  def train(state) do
-    GenServer.call(state, :train)
-  end
-    @impl true
-  def handle_call(:train, _from, state) do
-    {sample, label, tags} = 
-        Input.training_sample(input)
-    train(state, tags, sample, label)
-  end
-  defp train(state, tags, sample, label)
-  defp train(state, {rain: true}, 
-             sample, label) do
-    # follow Algo. 5
-  end
-  defp train(state, _tags, sample, label) do
-    # fallback to the normal model
-  end
+defmodule CAEFL.SimpleAgent do
+  @callback should_update_local_model?(self :: term()) ::
+    {boolean(), new_self :: term()}
+  @callback should_stop?(self :: term()) ::
+    {true, reason :: atom(), reply :: term(), new_self :: term()}
+    | false
+  @callback update_local_tagged_model(model_param :: term(), env_tag :: term(), data :: term()) ::
+    updated_model_param :: term()
+  @callback get_initial_model(opts :: term()) ::
+    model_param :: term()
+  @callback should_push_local_tagged_model_to_parameter_server?(self :: term(), model_tag :: term(), model_param :: term()) ::
+    should_push? :: boolean()
 end
 ```
 
 ### ParameterServer
 ```elixir
-defmodule ParameterServer do
+defmodule CAEFL.ParameterServer do
   use GenServer
   @impl true
   def handle_cast({:model_updates, tags, updates},
