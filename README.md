@@ -27,6 +27,14 @@ defmodule CAEFL.Sensor do
 end
 ```
 
+Note that it's not required to use the `CAEFL.Sensor` module. Of course, there are `CAEFL.Sensor.start` and `CAEFL.Sensor.start_link` for different use cases.
+
+If the sensor data is optional or the sensor is designed to be hot-swappable, then it's recommended to use `CAEFL.Sensor.start` to init the sensor.
+
+If the sensor is critical for the agent, then perhaps `CAEFL.Sensor.start_link` could be used. If the sensor goes offline, then the whole system will try to restart. 
+
+But this really depends on your design and how you prefer to handle sensor failures. It's complete okay to wait for that sensor to restart instead of linking it with the agent.
+
 ### Environment
 ```elixir
 defmodule CAEFL.Environment do
